@@ -8,8 +8,8 @@ st.markdown(
     """
     <style>
     .banner-img img {
-        width: 100%;
-        height: 400px; /* Hoặc 400px tùy bạn chọn */
+        width: 200%;
+        height: 200px; /* Hoặc 400px tùy bạn chọn */
         object-fit: cover; /* Tự cắt viền thừa, giữ đúng tỷ lệ hình ảnh */
         border-radius: 8px; /* Bo tròn góc nhẹ cho đẹp mắt */
     }
