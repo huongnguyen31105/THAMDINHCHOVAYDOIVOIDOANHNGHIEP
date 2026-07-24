@@ -9,7 +9,6 @@ st.image(
     use_container_width=True
 )
 
-st.title("🏦 Hệ Thống Thẩm Định Cho Vay Doanh Nghiệp")
 # Cấu hình trang
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
 
