@@ -5,7 +5,7 @@ st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="w
 
 # 📸 THÊM HÌNH ĐẦU TRANG TỪ FILE TRONG REPOSITORY
 st.image(
-    "banner.jpg", # Tên file ảnh trong repo GitHub của bạn
+    "logo.jpg", # Tên file ảnh trong repo GitHub của bạn
     use_container_width=True
 )
 
