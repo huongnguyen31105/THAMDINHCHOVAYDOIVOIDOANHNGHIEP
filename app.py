@@ -3,11 +3,25 @@ import pandas as pd
 
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
 
-# 📸 THÊM HÌNH ĐẦU TRANG TỪ FILE TRONG REPOSITORY
-st.image(
-    "logo.jpg", # Tên file ảnh trong repo GitHub của bạn
-    use_container_width=True
+# Thêm CSS để giới hạn chiều cao khung Banner (ví dụ: tối đa 300px)
+st.markdown(
+    """
+    <style>
+    .banner-img img {
+        width: 100%;
+        height: 300px; /* Hoặc 400px tùy bạn chọn */
+        object-fit: cover; /* Tự cắt viền thừa, giữ đúng tỷ lệ hình ảnh */
+        border-radius: 8px; /* Bo tròn góc nhẹ cho đẹp mắt */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
+
+# Đặt ảnh vào trong một div có class banner-img
+st.markdown('<div class="banner-img">', unsafe_allow_html=True)
+st.image("banner.jpg")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Cấu hình trang
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
