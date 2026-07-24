@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
+import streamlit as st
 
+st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
+
+# 📸 THÊM HÌNH ĐẦU TRANG TỪ FILE TRONG REPOSITORY
+st.image(
+    "banner.jpg", # Tên file ảnh trong repo GitHub của bạn
+    use_container_width=True
+)
+
+st.title("🏦 Hệ Thống Thẩm Định Cho Vay Doanh Nghiệp")
 # Cấu hình trang
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
 
