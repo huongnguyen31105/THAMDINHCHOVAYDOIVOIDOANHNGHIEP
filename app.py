@@ -1,167 +1,69 @@
-!pip install streamlit plotly pandas numpy
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 
-st.set_page_config(
-    page_title="Thẩm định cho vay doanh nghiệp",
-    page_icon="🏦",
-    layout="wide"
-)
+# Cấu hình trang
+st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
 
-st.title("🏦 WEB APP THẨM ĐỊNH CHO VAY DOANH NGHIỆP")
+st.title("🏦 Hệ Thống Thẩm Định Cho Vay Doanh Nghiệp")
+st.write("Nhập thông tin tài chính và thông tin khoản vay để phân tích rủi ro sơ bộ.")
 
-st.markdown("---")
+st.divider()
 
-col1,col2=st.columns(2)
+# Chia cột nhập liệu
+col1, col2 = st.columns(2)
 
 with col1:
-
-    roa=st.number_input(
-        "ROA (%)",
-        value=5.0
-    )
-
-    roe=st.number_input(
-        "ROE (%)",
-        value=15.0
-    )
-
-    lnst=st.number_input(
-        "Lợi nhuận sau thuế (VNĐ)",
-        value=5000000000.0,
-        step=100000000
-    )
-
-    tsdb=st.number_input(
-        "Giá trị tài sản bảo đảm",
-        value=10000000000.0,
-        step=100000000
-    )
+    st.subheader("1. Chỉ số Tài chính Doanh nghiệp")
+    roa = st.number_input("ROA (%)", value=5.0, step=0.1)
+    roe = st.number_input("ROE (%)", value=12.0, step=0.1)
+    lnst = st.number_input("Lợi nhuận sau thuế - LNST (Tỷ VNĐ)", value=2.5, step=0.1)
+    tsdb = st.number_input("Giá trị Tài sản bảo đảm - TSĐB (Tỷ VNĐ)", value=10.0, step=0.5)
 
 with col2:
+    st.subheader("2. Đề xuất Khoản vay")
+    so_tien_vay = st.number_input("Số tiền đề nghị vay (Tỷ VNĐ)", value=6.0, step=0.5)
+    thoi_gian_vay = st.number_input("Thời gian vay (Tháng)", value=12, min_value=1)
+    lai_suat = st.number_input("Lãi suất cho vay (%/năm)", value=9.5, step=0.1)
 
-    tien_vay=st.number_input(
-        "Số tiền vay",
-        value=5000000000.0,
-        step=100000000
-    )
+st.divider()
 
-    thoi_gian=st.number_input(
-        "Thời gian vay (năm)",
-        value=5
-    )
+# Tính toán các chỉ số thẩm định
+# 1. Hệ số LTV (Loan to Value)
+ltv = (so_tien_vay / tsdb * 100) if tsdb > 0 else 0
 
-    lai_suat=st.number_input(
-        "Lãi suất (%/năm)",
-        value=9.5
-    )
+# 2. Ước tính nghĩa vụ trả nợ hàng tháng (Gốc đều + Lãi tháng đầu tiên)
+goc_hang_thang = (so_tien_vay * 10**9) / thoi_gian_vay
+lai_thang_dau = (so_tien_vay * 10**9) * (lai_suat / 100 / 12)
+tong_tra_thang_dau = goc_hang_thang + lai_thang_dau
 
-st.markdown("---")
+# 3. Khả năng bao phủ từ LNST hàng tháng
+lnst_hang_thang = (lnst * 10**9) / 12
+kha_nang_tra_no = (lnst_hang_thang / tong_tra_thang_dau) if tong_tra_thang_dau > 0 else 0
 
-if st.button("THẨM ĐỊNH"):
+# Hiển thị kết quả
+st.subheader("📊 Kết Quả Phân Tích & Đánh Giá")
 
-    ltv=tien_vay/tsdb*100
+m1, m2, m3 = st.columns(3)
+m1.metric("Tỷ lệ LTV (Vay / TSĐB)", f"{ltv:.1f}%")
+m2.metric("Nghĩa vụ trả nợ tháng đầu", f"{tong_tra_thang_dau / 10**6:,.0f} Triệu VNĐ")
+m3.metric("Độ bao phủ LNST / Nợ tháng", f"{kha_nang_tra_no:.2f} lần")
 
-    tien_lai=tien_vay*lai_suat/100*thoi_gian
+# Đánh giá rủi ro sơ bộ
+st.subheader("📝 Kết luận Thẩm định Sơ bộ")
 
-    tong=tien_vay+tien_lai
+canh_bao = []
+if ltv > 70:
+    canh_bao.append("⚠️ Tỷ lệ LTV vượt mức an toàn thông thường (> 70%).")
+if roa < 2.0:
+    canh_bao.append("⚠️ Hiệu quả sử dụng tài sản (ROA) thấp (< 2%).")
+if roe < 5.0:
+    canh_bao.append("⚠️ Tỷ suất sinh lời trên vốn chủ sở hữu (ROE) yếu (< 5%).")
+if kha_nang_tra_no < 1.0:
+    canh_bao.append("⚠️ Lợi nhuận sau thuế hàng tháng không đủ bao phủ nghĩa vụ trả nợ gốc + lãi.")
 
-    diem=0
-
-    # ROA
-    if roa>=8:
-        diem+=20
-    elif roa>=5:
-        diem+=15
-    elif roa>=2:
-        diem+=10
-
-    # ROE
-    if roe>=20:
-        diem+=20
-    elif roe>=15:
-        diem+=15
-    elif roe>=10:
-        diem+=10
-
-    # LNST
-    if lnst>=10000000000:
-        diem+=20
-    elif lnst>=5000000000:
-        diem+=15
-    elif lnst>0:
-        diem+=10
-
-    # LTV
-    if ltv<=60:
-        diem+=20
-    elif ltv<=80:
-        diem+=10
-
-    # Lãi suất
-    if lai_suat<=8:
-        diem+=20
-    elif lai_suat<=10:
-        diem+=15
-    else:
-        diem+=10
-
-    if diem>=80:
-        ket_luan="🟢 CHẤP THUẬN"
-
-    elif diem>=60:
-        ket_luan="🟡 CẦN XEM XÉT"
-
-    else:
-        ket_luan="🔴 TỪ CHỐI"
-
-    st.success("Kết quả thẩm định")
-
-    c1,c2,c3=st.columns(3)
-
-    c1.metric("Điểm tín dụng",f"{diem}/100")
-
-    c2.metric("LTV",f"{ltv:.2f}%")
-
-    c3.metric("Tổng tiền phải trả",f"{tong:,.0f} VNĐ")
-
-    st.write("### Kết luận")
-
-    st.header(ket_luan)
-
-    bang=pd.DataFrame({
-
-        "Chỉ tiêu":[
-            "ROA",
-            "ROE",
-            "LTV",
-            "Điểm"
-        ],
-
-        "Giá trị":[
-            roa,
-            roe,
-            ltv,
-            diem
-        ]
-
-    })
-
-    fig=go.Figure()
-
-    fig.add_trace(
-
-        go.Bar(
-
-            x=bang["Chỉ tiêu"],
-
-            y=bang["Giá trị"]
-
-        )
-
-    )
-
-    st.plotly_chart(fig,use_container_width=True)
-
-    st.dataframe(bang)
+if not canh_bao:
+    st.success("✅ **Hồ sơ đạt điều kiện thẩm định sơ bộ.** Đề xuất tiếp tục chuyển sang bước thẩm định chi tiết dòng tiền.")
+else:
+    st.warning("⚠️ **Hồ sơ có dấu hiệu rủi ro cao:**")
+    for cb in canh_bao:
+        st.write(cb)
