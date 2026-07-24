@@ -20,7 +20,7 @@ st.markdown(
 
 # Đặt ảnh vào trong một div có class banner-img
 st.markdown('<div class="banner-img">', unsafe_allow_html=True)
-st.image("banner.jpg")
+st.image("logo.jpg")
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Cấu hình trang
