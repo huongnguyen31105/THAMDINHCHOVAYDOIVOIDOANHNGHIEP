@@ -3,25 +3,14 @@ import pandas as pd
 
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
 
-# Thêm CSS để giới hạn chiều cao khung Banner (ví dụ: tối đa 300px)
-st.markdown(
-    """
-    <style>
-    .banner-img img {
-        width: 200%;
-        height: 200px; /* Hoặc 400px tùy bạn chọn */
-        object-fit: cover; /* Tự cắt viền thừa, giữ đúng tỷ lệ hình ảnh */
-        border-radius: 8px; /* Bo tròn góc nhẹ cho đẹp mắt */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# 1. Mở file ảnh
+image = Image.open("logo.jpg")
 
-# Đặt ảnh vào trong một div có class banner-img
-st.markdown('<div class="banner-img">', unsafe_allow_html=True)
-st.image("logo.jpg")
-st.markdown('</div>', unsafe_allow_html=True)
+# 2. Resize ảnh về kích thước mong muốn (1200x300 hoặc 1920x400)
+resized_image = image.resize((1200, 300))
+
+# 3. Hiển thị ảnh đã resize
+st.image(resized_image, use_container_width=True)
 
 # Cấu hình trang
 st.set_page_config(page_title="Thẩm Định Cho Vay Doanh Nghiệp", layout="wide")
